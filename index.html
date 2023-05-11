@@ -123,7 +123,7 @@
 			var name = "Point " + (i + 1);
 			var url = "https://epsg.io/srs/transform/" + x + "," + y + ".json?key=default&s_srs=29902&t_srs=4326";
 			$.getJSON(url, function(data) {
-			  out_data.push({Point: name , X: x, Y: y, Lat: data.results[0].x, Long: data.results[0].y})
+			  out_data.push({Point: name , X: x, Y: y, Long: data.results[0].x, Lat: data.results[0].y})
 			  if(out_data.length == rows.length){
 			  
 				out_data.sort((a, b) => a.Point.localeCompare(b.Point));
