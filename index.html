@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Coordinate Converter</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<style>
+  #table {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  #table th,
+  #table td {
+    text-align: left;
+    padding: 8px;
+  }
+
+  #table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  #table th {
+    background-color: #4CAF50;
+    color: white;
+  }
+</style>
+
+<style>
+      body {
+        background-color: #F7F7F7;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      h1 {
+        text-align: center;
+        font-size: 36px;
+        margin-top: 40px;
+      }
+
+      form {
+        margin: 40px auto;
+        width: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      textarea {
+        padding: 10px;
+        font-size: 18px;
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        resize: none;
+      }
+
+      button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        font-size: 20px;
+        margin-top: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #3E8E41;
+      }
+
+      table {
+        border-collapse: collapse;
+        width: 80%;
+        margin: 40px auto;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        text-align: left;
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #4CAF50;
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Coordinate Converter</h1>
+    <form>
+      <textarea id="input" placeholder="Copy Paste X and Y values from Excel/CSV to convert from Irish Grid[29902] to Latitude and Longitude (EPSG:4326)" rows="10" cols="50"></textarea>
+      <br>
+      <button type="button" id="submit">Convert</button>
+    </form>
+    <br>
+    <div id="table"></div>
+    <script>
+      $(document).ready(function() {
+        $("#submit").click(function() {
+		  var out_data = []
+		  var input = $("#input").val();
+		  var rows = input.split("\n");
+		  
+		  rows = rows.filter(row => {var cells = row.split(/[\s,]+/);return !isNaN(cells[0]) && !isNaN(cells[1]) })
+		  
+		  rows.forEach((row, i) => {
+			var cells = row.split(/[\s,]+/);
+			var x = cells[0];
+			var y = cells[1];
+			var name = "Point " + (i + 1);
+			var url = "https://epsg.io/srs/transform/" + x + "," + y + ".json?key=default&s_srs=29902&t_srs=4326";
+			$.getJSON(url, function(data) {
+			  out_data.push({Point: name , X: x, Y: y, Lat: data.results[0].x, Long: data.results[0].y})
+			  if(out_data.length == rows.length){
+			  
+				out_data.sort((a, b) => a.Point.localeCompare(b.Point));
+				console.log(out_data)
+	
+				const table = document.createElement('table');
+				const thead = table.createTHead();
+				const tbody = table.createTBody();
+
+				const headerRow = thead.insertRow();
+				Object.keys(out_data[0]).forEach(key => {
+				  const th = document.createElement('th');
+				  th.textContent = key;
+				  headerRow.appendChild(th);
+				});
+
+				out_data.forEach((item, index) => {
+				  const row = tbody.insertRow();
+				  Object.values(item).forEach(val => {
+					const cell = row.insertCell();
+					cell.textContent = val;
+				  });
+				});
+
+				const tableContainer = document.getElementById('table');
+				tableContainer.appendChild(table);
+			  }
+			});
+		  })
+        });
+      });
+    </script>
+  </body>
+</html>
