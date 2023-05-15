@@ -36,7 +36,6 @@
         text-align: center;
 		font-family: Arial, Helvetica, sans-serif;
         font-size: 20px;
-        margin-top: 40px;
       }
 
       form {
@@ -51,7 +50,7 @@
         padding: 10px;
         font-size: 14px;
         border-radius: 10px;
-		height: 300px;
+		
         border: none;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
         resize: none;
@@ -97,34 +96,51 @@
 
       tr:nth-child(even) {
         background-color: #f2f2f2;
-      }
+      } 
+	  
+	  .text{
+		font-size: 12px;
+		margin:20;
+		width: 80%;
+		margin: auto;
+	  }
+	  
     </style>
   </head>
   <body>
     <h1>Convert: Irish Grid[29908] to Latitude and Logitude[EPSG: 4326]</h1>
-	<p>
-    <form>
-      <textarea id="input" placeholder="Input Irish Grid[29908] X (Easting) and Y(Northing) here to convert to Latitude and Longitude (EPSG:4326).
+	
+    <form style="display: flex; flex-direction: row;">
+	
+		<div>
+			<p class="text">
+				<b>User Guidance: </b> <br/><br/>
+			</p>
+			<p class="text">
+				Input Irish Grid[29908] X (Easting) and Y(Northing) and press 'Convert' to convert to Latitude and Longitude (EPSG:4326). Each coordinate pair should be in separate lines, and in each line, X and Y should be separated by spaces or comma. <br/><br/><b>(Copy-paste table from excel/csv to input data in required format) </b><br/>.
+			</p>
+			<p class="text">
+				Example of input Data: <br/><br/>
 
-Each coordinate pair should be in separete lines, and in each line, X and Y should be seperated by spaces or comma. 
+				219615.6	158591 		<br/>
+				240969.2	164777.6	<br/>
+				240955.6	164790.2	<br/>
+										<br/>	
+				OR 						<br/><br/>
 
-(Copy-paste table from excel/csv to get input data in required format) . 
-
-Example of input data: 
-
-219615.6	158591
-240969.2	164777.6
-240955.6	164790.2
-
-OR 
-
-219615.6, 158591
-240969.2, 164777.6
-240955.6, 164790.2" rows="10" cols="50"></textarea>
-      <br>
-      <button type="button" id="submit">Convert</button>
+				219615.6, 158591		<br/>
+				240969.2, 164777.6		<br/>
+				240955.6, 164790.2		<br/>
+			</p>
+		</div>
+		
+		<div>
+		  <textarea id="input" placeholder="Input here ..." rows="13" cols="35"></textarea>
+		  <br>
+		  <button type="button" id="submit">Convert</button>
+		 </div>
+		 
     </form>
-    <br>
     <div id="table"></div>
     <script>
       $(document).ready(function() {
