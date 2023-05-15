@@ -5,29 +5,28 @@
     <title>Coordinate Converter</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<style>
-  #table {
-    font-family: Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-  }
 
-  #table th,
-  #table td {
-    text-align: left;
-    padding: 8px;
-  }
+	  #table {
+		font-family: Arial, Helvetica, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+	  }
 
-  #table tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
+	  #table th,
+	  #table td {
+		text-align: left;
+		padding: 8px;
+	  }
 
-  #table th {
-    background-color: #4CAF50;
-    color: white;
-  }
-</style>
+	  #table tr:nth-child(even) {
+		background-color: #f2f2f2;
+	  }
 
-<style>
+	  #table th {
+		background-color: #4CAF50;
+		color: white;
+	  }
+
       body {
         background-color: #F7F7F7;
         font-family: Arial, Helvetica, sans-serif;
@@ -35,7 +34,8 @@
 
       h1 {
         text-align: center;
-        font-size: 36px;
+		font-family: Arial, Helvetica, sans-serif;
+        font-size: 20px;
         margin-top: 40px;
       }
 
@@ -49,8 +49,9 @@
 
       textarea {
         padding: 10px;
-        font-size: 18px;
+        font-size: 14px;
         border-radius: 10px;
+		height: 300px;
         border: none;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
         resize: none;
@@ -75,8 +76,9 @@
 
       table {
         border-collapse: collapse;
-        width: 80%;
+        width: 40%;
         margin: 40px auto;
+		margin-top: 0px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
         overflow: hidden;
       }
@@ -99,9 +101,26 @@
     </style>
   </head>
   <body>
-    <h1>Coordinate Converter</h1>
+    <h1>Convert: Irish Grid[29908] to Latitude and Logitude[EPSG: 4326]</h1>
+	<p>
     <form>
-      <textarea id="input" placeholder="Copy Paste X and Y values from Excel/CSV to convert from Irish Grid[29902] to Latitude and Longitude (EPSG:4326)" rows="10" cols="50"></textarea>
+      <textarea id="input" placeholder="Input Irish Grid[29908] X (Easting) and Y(Northing) here to convert to Latitude and Longitude (EPSG:4326).
+
+Each coordinate pair should be in separete lines, and in each line, X and Y should be seperated by spaces or comma. 
+
+(Copy-paste table from excel/csv to get input data in required format) . 
+
+Example of input Data: 
+
+219615.6	158591
+240969.2	164777.6
+240955.6	164790.2
+
+OR 
+
+219615.6, 158591
+240969.2, 164777.6
+240955.6, 164790.2" rows="10" cols="50"></textarea>
       <br>
       <button type="button" id="submit">Convert</button>
     </form>
@@ -113,20 +132,20 @@
 		  var out_data = []
 		  var input = $("#input").val();
 		  var rows = input.split("\n");
-		  
 		  rows = rows.filter(row => {var cells = row.split(/[\s,]+/);return !isNaN(cells[0]) && !isNaN(cells[1]) })
 		  
 		  rows.forEach((row, i) => {
 			var cells = row.split(/[\s,]+/);
 			var x = cells[0];
 			var y = cells[1];
-			var name = "Point " + (i + 1);
+			var name = i + 1;
 			var url = "https://epsg.io/srs/transform/" + x + "," + y + ".json?key=default&s_srs=29902&t_srs=4326";
 			$.getJSON(url, function(data) {
-			  out_data.push({Point: name , X: x, Y: y, Long: data.results[0].x, Lat: data.results[0].y})
+			  out_data.push({Point: name , "X-Easting": x, "Y-Northing": y, Latitude: data.results[0].x.toFixed(7), Longitude: data.results[0].y.toFixed(7)})
+			  
 			  if(out_data.length == rows.length){
 			  
-				out_data.sort((a, b) => a.Point.localeCompare(b.Point));
+				out_data.sort((a, b) => a.Point - b.Point);;
 				console.log(out_data)
 	
 				const table = document.createElement('table');
