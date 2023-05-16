@@ -157,7 +157,7 @@
 			var name = i + 1;
 			var url = "https://epsg.io/srs/transform/" + x + "," + y + ".json?key=default&s_srs=29902&t_srs=4326";
 			$.getJSON(url, function(data) {
-			  out_data.push({Point: name , "X-Easting": x, "Y-Northing": y, Longitude: data.results[0].x.toFixed(7), Latitude: data.results[0].y.toFixed(7)})
+			  out_data.push({Point: name , "X-Easting": x, "Y-Northing": y, Latitude: data.results[0].y.toFixed(7), Longitude: data.results[0].x.toFixed(7)})
 			  
 			  if(out_data.length == rows.length){
 			  
